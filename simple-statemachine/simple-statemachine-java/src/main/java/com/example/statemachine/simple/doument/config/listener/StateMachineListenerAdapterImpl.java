@@ -16,10 +16,11 @@ public class StateMachineListenerAdapterImpl
 
   private static String getStateString(
     final State<DocumentState, DocumentEvent> state) {
-    final var optional = Optional.ofNullable(state);
 
-    return optional.isEmpty()
-      ? "null" : optional.get().getId().toString();
+    return Optional.ofNullable(state)
+      .map(State::getId)
+      .map(Enum::toString)
+      .orElse("null");
   }
 
   @Override
