@@ -10,18 +10,18 @@ import org.springframework.statemachine.state.State
 import org.springframework.statemachine.transition.Transition
 
 class DocumentStateChangedHistoryWriter(private val jdbcTemplate: JdbcTemplate) :
-  AbstractPersistStateMachineHandler.GenericPersistStateChangeListener<DocumentState?, DocumentEvent?> {
+  AbstractPersistStateMachineHandler.GenericPersistStateChangeListener<DocumentState, DocumentEvent> {
 
 
   override fun onPersist(
-    state: State<DocumentState?, DocumentEvent?>?,
-    message: Message<DocumentEvent?>?,
-    transition: Transition<DocumentState?, DocumentEvent?>?,
-    stateMachine: StateMachine<DocumentState?, DocumentEvent?>?
+    state: State<DocumentState, DocumentEvent>,
+    message: Message<DocumentEvent>,
+    transition: Transition<DocumentState, DocumentEvent>,
+    stateMachine: StateMachine<DocumentState, DocumentEvent>
   ) {
-    if (message!!.headers.containsKey("document")) {
+    if (message.headers.containsKey("document")) {
       val documentId = message.headers.get("document", Integer::class.java)
-      val event = transition!!.trigger.event!!
+      val event = transition.trigger.event!!
       val prevState = transition.source.id!!
       val changedState = transition.target.id!!
 

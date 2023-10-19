@@ -6,5 +6,5 @@ import org.springframework.statemachine.StateMachine
 import org.springframework.statemachine.recipes.persist.GenericPersistStateMachineHandler
 
 class DocumentPersistStateMachineHandler(
-  stateMachine: StateMachine<DocumentState?, DocumentEvent?>?
-) : GenericPersistStateMachineHandler<DocumentState?, DocumentEvent?>(stateMachine)
+  stateMachine: StateMachine<DocumentState, DocumentEvent>
+) : GenericPersistStateMachineHandler<DocumentState, DocumentEvent>(stateMachine)

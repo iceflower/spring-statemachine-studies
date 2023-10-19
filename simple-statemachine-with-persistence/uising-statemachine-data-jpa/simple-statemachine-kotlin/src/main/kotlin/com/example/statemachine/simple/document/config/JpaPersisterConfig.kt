@@ -12,7 +12,7 @@ import org.springframework.statemachine.persist.StateMachineRuntimePersister
 class JpaPersisterConfig {
   @Bean
   fun stateMachineRuntimePersister(
-    jpaStateMachineRepository: JpaStateMachineRepository?
+    jpaStateMachineRepository: JpaStateMachineRepository
   ): StateMachineRuntimePersister<DocumentState, DocumentEvent, String> {
     return JpaPersistingStateMachineInterceptor(
       jpaStateMachineRepository

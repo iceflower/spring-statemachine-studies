@@ -7,7 +7,6 @@ import org.springframework.statemachine.StateMachine
 import org.springframework.statemachine.StateMachineContext
 import org.springframework.statemachine.StateMachinePersist
 import org.springframework.statemachine.service.StateMachineService
-import org.springframework.util.ObjectUtils
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -81,7 +80,7 @@ class DocumentStateMachineRestController(
 
     // currentStateMachine 이 null은 아니지만, currentStateMachine의 id가 주어진 machineId와 다를 경우
     // 기존 stateMachine 객체는 release 및 stop 처리를 진행한 후, machineId를 가진 새로운 stateMachine 객체를 생성한다.
-    if (!ObjectUtils.nullSafeEquals(currentStateMachine!!.id, machineId)) {
+    if (currentStateMachine!!.id != machineId) {
       stateMachineService.releaseStateMachine(currentStateMachine!!.id)
       currentStateMachine!!.stopReactively().block()
       currentStateMachine = stateMachineService.acquireStateMachine(machineId)
@@ -100,7 +99,6 @@ class DocumentStateMachineRestController(
         .build()
     )
   }
-
 
   data class StateMachineStatement(
     val machineId: String,
