@@ -13,8 +13,8 @@ class StateMachineListenerAdapterImpl :
 
   override fun stateChanged(
     from: State<DocumentState, DocumentEvent>?,
-    to: State<DocumentState, DocumentEvent>?
+    to: State<DocumentState, DocumentEvent>
   ) {
-    logger.info("문서의 상태가 {} 에서 {} 로 변경되었습니다.", from?.id, to?.id)
+    logger.info("문서의 상태가 {} 에서 {} 로 변경되었습니다.", from?.id, to.id)
   }
 }

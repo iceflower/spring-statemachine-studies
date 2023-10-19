@@ -11,7 +11,7 @@ import org.springframework.statemachine.StateMachine
 
 @Configuration
 class PersistHandlerConfig(
-  private val stateMachine: StateMachine<DocumentState?, DocumentEvent?>,
+  private val stateMachine: StateMachine<DocumentState, DocumentEvent>,
   private val jdbcTemplate: JdbcTemplate
 ) {
 

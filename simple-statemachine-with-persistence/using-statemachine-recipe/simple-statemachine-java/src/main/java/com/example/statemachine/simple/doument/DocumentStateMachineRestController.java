@@ -14,7 +14,6 @@ public class DocumentStateMachineRestController {
   private final JdbcTemplate jdbcTemplate;
   private final DocumentStateMachine documentStateMachine;
 
-
   public DocumentStateMachineRestController(
     final JdbcTemplate jdbcTemplate,
     final DocumentStateMachine documentStateMachine) {

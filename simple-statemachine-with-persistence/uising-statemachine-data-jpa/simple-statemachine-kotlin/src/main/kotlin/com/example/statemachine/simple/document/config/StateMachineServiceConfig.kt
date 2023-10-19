@@ -13,8 +13,8 @@ import org.springframework.statemachine.service.StateMachineService
 class StateMachineServiceConfig {
   @Bean
   fun stateMachineService(
-    stateMachineFactory: StateMachineFactory<DocumentState, DocumentEvent>?,
-    stateMachineRuntimePersister: StateMachineRuntimePersister<DocumentState, DocumentEvent, String?>?
+    stateMachineFactory: StateMachineFactory<DocumentState, DocumentEvent>,
+    stateMachineRuntimePersister: StateMachineRuntimePersister<DocumentState, DocumentEvent, String>
   ): StateMachineService<DocumentState, DocumentEvent> {
     return DefaultStateMachineService(stateMachineFactory, stateMachineRuntimePersister)
   }

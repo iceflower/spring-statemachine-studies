@@ -11,7 +11,7 @@ class SendEmailAction : Action<DocumentState, DocumentEvent> {
 
   private val logger: Logger = LoggerFactory.getLogger(SendEmailAction::class.java)
 
-  override fun execute(p0: StateContext<DocumentState, DocumentEvent>?) {
+  override fun execute(p0: StateContext<DocumentState, DocumentEvent>) {
     logger.info("이메일 전송 : [문서가 대외 공개되었습니다.]")
   }
 }

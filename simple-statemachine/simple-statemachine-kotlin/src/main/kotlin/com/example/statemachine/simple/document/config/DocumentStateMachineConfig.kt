@@ -15,12 +15,11 @@ import org.springframework.statemachine.listener.StateMachineListenerAdapter
 
 @Configuration
 @EnableStateMachine
-class DocumentStateConfig : EnumStateMachineConfigurerAdapter<DocumentState, DocumentEvent>() {
+class DocumentStateMachineConfig : EnumStateMachineConfigurerAdapter<DocumentState, DocumentEvent>() {
 
   // 상태 기계 설정을 진행한다.
   override fun configure(
-    config: StateMachineConfigurationConfigurer<DocumentState, DocumentEvent>
-  ) {
+    config: StateMachineConfigurationConfigurer<DocumentState, DocumentEvent>) {
 
     config.withConfiguration()
       .autoStartup(true)
@@ -35,13 +34,12 @@ class DocumentStateConfig : EnumStateMachineConfigurerAdapter<DocumentState, Doc
       .state(DocumentState.UNDER_MEDIATION)
       .state(DocumentState.WAITING_FOR_PUBLIC_DISCLOSURE)
       .state(DocumentState.PUBLIC_DISCLOSURE, SendEmailAction()) // state 별 로직을 설정 가능.
-    // .end() // 최종 상태가 존재하는 경우 이 메소드를 통해 설정할 수 있다.
+      // .end() // 최종 상태가 존재하는 경우 이 메소드를 통해 설정할 수 있다.
   }
 
   // 상태 기계의 'event (이벤트)' 와 'state transition (상태 전이)' 를 매핑한다.
   override fun configure(
-    transitions: StateMachineTransitionConfigurer<DocumentState, DocumentEvent>
-  ) {
+    transitions: StateMachineTransitionConfigurer<DocumentState, DocumentEvent>) {
 
     transitions.withExternal()
       .source(DocumentState.DRAFT).target(DocumentState.UNDER_MEDIATION)

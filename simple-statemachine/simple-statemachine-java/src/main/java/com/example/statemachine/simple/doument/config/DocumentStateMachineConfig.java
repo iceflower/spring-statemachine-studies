@@ -15,7 +15,7 @@ import org.springframework.statemachine.listener.StateMachineListenerAdapter;
 
 @Configuration
 @EnableStateMachine
-public class DocumentStateConfig
+public class DocumentStateMachineConfig
   extends EnumStateMachineConfigurerAdapter<DocumentState, DocumentEvent> {
 
   // 상태 기계 설정을 진행한다.
