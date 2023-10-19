@@ -1,0 +1,54 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+plugins {
+    id 'org.springframework.boot' version '3.1.4'
+    id 'io.spring.dependency-management' version '1.1.3'
+    id 'org.jetbrains.kotlin.jvm' version '1.9.20-Beta2'
+    id 'org.jetbrains.kotlin.plugin.spring' version '1.9.20-Beta2'
+}
+
+group = 'com.example.statemachine'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+ext {
+    springStatemachineVersion = '3.2.1'
+
+}
+
+repositories {
+    mavenCentral()
+    maven { url "https://repo.spring.io/snapshot" }
+    maven { url "https://repo.spring.io/milestone" }
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.statemachine:spring-statemachine-bom:${springStatemachineVersion}"
+    }
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-jdbc' // jdbc로 rdb에 데이터를 적재하기 위해 필요.
+    implementation 'org.jetbrains.kotlin:kotlin-reflect'
+    implementation 'org.springframework.statemachine:spring-statemachine-starter'
+    implementation 'org.springframework.statemachine:spring-statemachine-recipes-common' // persist 관련 유틸리티 객체를 사용하기 위해 필요.
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    runtimeOnly 'com.h2database:h2'
+}
+
+tasks.withType(KotlinCompile) {
+    kotlinOptions {
+        freeCompilerArgs += '-Xjsr305=strict'
+        jvmTarget = JavaVersion.VERSION_17
+    }
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
