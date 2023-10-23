@@ -1,8 +1,6 @@
 package com.example.statemachine.simple.doument;
 
-import java.util.Map;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.Objects;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.statemachine.StateMachine;
@@ -29,12 +27,12 @@ public class DocumentStateMachineRestController {
 
 
   @GetMapping("/event-list")
-  public DocumentEvent[] getSventList() {
+  public DocumentEvent[] getEventList() {
 
     return DocumentEvent.values();
   }
 
-  @GetMapping("/current-state")
+  @GetMapping(value = "/current-state")
   public DocumentState currentState() {
 
     return stateMachine.getState()
@@ -47,8 +45,8 @@ public class DocumentStateMachineRestController {
     final var prevState = stateMachine.getState()
       .getId();
 
-    final var result = stateMachine.sendEvent(makeEventMessage(event))
-      .blockLast();
+    final var result = Objects.requireNonNull(stateMachine.sendEvent(makeEventMessage(event))
+      .blockLast());
 
     final var changedState = result.getRegion()
       .getState().getId();
@@ -62,10 +60,10 @@ public class DocumentStateMachineRestController {
       .build());
   }
 
-  private record EventResultStatement(DocumentEvent event, State state) {
+  public record EventResultStatement(DocumentEvent event, State state) {
 
   }
-  private record State(DocumentState prev, DocumentState changed) {
+  public record State(DocumentState prev, DocumentState changed) {
 
   }
 }
