@@ -1,4 +1,4 @@
-package com.example.statemachine.simple.config
+package com.example.statemachine.simple.document.config
 
 import com.example.statemachine.simple.StateMachineUnitTestHelper
 import com.example.statemachine.simple.TestArgumentsHelper

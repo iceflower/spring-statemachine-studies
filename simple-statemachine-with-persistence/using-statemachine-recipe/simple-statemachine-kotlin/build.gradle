@@ -38,8 +38,13 @@ dependencies {
     implementation 'org.jetbrains.kotlin:kotlin-reflect'
     implementation 'org.springframework.statemachine:spring-statemachine-starter'
     implementation 'org.springframework.statemachine:spring-statemachine-recipes-common' // persist 관련 유틸리티 객체를 사용하기 위해 필요.
+    testImplementation 'org.springframework.statemachine:spring-statemachine-test'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation("io.kotest:kotest-runner-junit5:5.4.2") // kotlin junit 처럼 쓸 수 있는 Spec 들이 정의 됨
+    testImplementation("io.kotest:kotest-assertions-core:5.4.2") // shouldBe... etc 와같이 Assertions 의 기능을 제공
+    testImplementation("io.kotest.extensions:kotest-extensions-spring:1.1.2") // spring boot test 를 위해서 추가\
     runtimeOnly 'com.h2database:h2'
+    testRuntimeOnly 'com.h2database:h2'
 }
 
 tasks.withType(KotlinCompile) {

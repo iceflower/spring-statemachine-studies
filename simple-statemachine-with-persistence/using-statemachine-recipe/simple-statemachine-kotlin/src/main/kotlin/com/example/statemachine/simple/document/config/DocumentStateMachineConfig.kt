@@ -3,9 +3,11 @@ package com.example.statemachine.simple.document.config
 import com.example.statemachine.simple.document.DocumentEvent
 import com.example.statemachine.simple.document.DocumentState
 import com.example.statemachine.simple.document.config.action.SendEmailAction
+import com.example.statemachine.simple.document.config.guard.PersistGuard
 import com.example.statemachine.simple.document.config.lintener.StateMachineListenerAdapterImpl
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.statemachine.config.EnableStateMachine
 import org.springframework.statemachine.config.EnumStateMachineConfigurerAdapter
 import org.springframework.statemachine.config.builders.StateMachineConfigurationConfigurer
@@ -15,7 +17,9 @@ import org.springframework.statemachine.listener.StateMachineListenerAdapter
 
 @Configuration
 @EnableStateMachine
-class DocumentStateMachineConfig : EnumStateMachineConfigurerAdapter<DocumentState, DocumentEvent>() {
+class DocumentStateMachineConfig(
+  private val jdbcTemplate: JdbcTemplate
+) : EnumStateMachineConfigurerAdapter<DocumentState, DocumentEvent>() {
 
   // 상태 기계 설정을 진행한다.
   override fun configure(
@@ -43,30 +47,36 @@ class DocumentStateMachineConfig : EnumStateMachineConfigurerAdapter<DocumentSta
     transitions: StateMachineTransitionConfigurer<DocumentState, DocumentEvent>
   ) {
 
+    val persistGuard = PersistGuard(jdbcTemplate)
     transitions.withExternal()
       .source(DocumentState.DRAFT).target(DocumentState.UNDER_MEDIATION)
       .event(DocumentEvent.DOCUMENT_PUBLISHED_BY_USER)
-      //.guard(something()) // 특정 조건에서만 상태 전이가 이루어지도록 설정할 수 있다.
+      .guard(persistGuard)
       .and()
       .withExternal()
       .source(DocumentState.DRAFT).target(DocumentState.PUBLIC_DISCLOSURE)
       .event(DocumentEvent.DOCUMENT_PUBLISHED_BY_ADMINISTRATOR)
+      .guard(persistGuard)
       .and()
       .withExternal()
       .source(DocumentState.UNDER_MEDIATION).target(DocumentState.DRAFT)
       .event(DocumentEvent.NEEDS_TO_BE_ADJUSTED_OR_REJECTED)
+      .guard(persistGuard)
       .and()
       .withExternal()
       .source(DocumentState.UNDER_MEDIATION).target(DocumentState.WAITING_FOR_PUBLIC_DISCLOSURE)
       .event(DocumentEvent.APPROVED)
+      .guard(persistGuard)
       .and()
       .withExternal()
       .source(DocumentState.WAITING_FOR_PUBLIC_DISCLOSURE).target(DocumentState.PUBLIC_DISCLOSURE)
       .event(DocumentEvent.APPROVED_DOCUMENT_IS_REVEALED_BY_ADMINISTRATOR)
+      .guard(persistGuard)
       .and()
       .withExternal()
       .source(DocumentState.PUBLIC_DISCLOSURE).target(DocumentState.DRAFT)
       .event(DocumentEvent.EXPIRED)
+      .guard(persistGuard)
   }
 
   @Bean

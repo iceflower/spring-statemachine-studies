@@ -34,6 +34,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-jdbc' // jdbc로 rdb에 데이터를 적재하기 위해 필요.
     implementation 'org.springframework.statemachine:spring-statemachine-starter'
     implementation 'org.springframework.statemachine:spring-statemachine-recipes-common' // persist 관련 유틸리티 객체를 사용하기 위해 필요.
+    testImplementation 'org.springframework.statemachine:spring-statemachine-test'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
     runtimeOnly 'com.h2database:h2'
