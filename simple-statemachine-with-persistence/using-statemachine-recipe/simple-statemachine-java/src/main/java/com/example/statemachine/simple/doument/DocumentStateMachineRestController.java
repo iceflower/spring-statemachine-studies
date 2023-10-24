@@ -1,8 +1,13 @@
 package com.example.statemachine.simple.doument;
 
+import com.example.statemachine.simple.doument.config.DocumentIdChecker;
+import com.example.statemachine.simple.doument.config.exception.PersistenceDataIsNotExistException;
 import com.example.statemachine.simple.doument.persist.DocumentStateMachine;
 import java.util.List;
+import java.util.Map;
+import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,12 +17,14 @@ import org.springframework.web.bind.annotation.RestController;
 public class DocumentStateMachineRestController {
 
   private final JdbcTemplate jdbcTemplate;
+  private final DocumentIdChecker documentIdChecker;
   private final DocumentStateMachine documentStateMachine;
 
   public DocumentStateMachineRestController(
     final JdbcTemplate jdbcTemplate,
     final DocumentStateMachine documentStateMachine) {
     this.jdbcTemplate = jdbcTemplate;
+    this.documentIdChecker = new DocumentIdChecker(jdbcTemplate);
     this.documentStateMachine = documentStateMachine;
   }
 
@@ -62,7 +69,19 @@ public class DocumentStateMachineRestController {
     return new EventResultStatement(documentId, event, new State(prevState, changedState));
   }
 
-  private DocumentState getStateFromDatabase(final int documentId) {
+  @ExceptionHandler(PersistenceDataIsNotExistException.class)
+  public ResponseEntity<Map<String, String>> handlePersistenceDataIsNotExistException(
+    final PersistenceDataIsNotExistException ex) {
+
+    return ResponseEntity.unprocessableEntity()
+      .body(Map.of("message", ex.getMessage()));
+  }
+
+  private DocumentState getStateFromDatabase(final int documentId)
+    throws PersistenceDataIsNotExistException {
+
+    documentIdChecker.isExist(documentId);
+
     return jdbcTemplate.queryForObject(
       "SELECT state FROM documents WHERE id = ?",
       DocumentState.class, documentId);

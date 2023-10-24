@@ -1,10 +1,9 @@
-package com.example.statemachine.simple
+package com.example.statemachine.simple.document
 
 import com.example.statemachine.simple.EnumConditionHelper.Companion.containsInDocumentEventNames
 import com.example.statemachine.simple.EnumConditionHelper.Companion.containsInDocumentStateNames
+import com.example.statemachine.simple.StateMachineUnitTestHelper
 import com.example.statemachine.simple.TestArgumentsHelper.getDocumentEvents
-import com.example.statemachine.simple.document.DocumentEvent
-import com.example.statemachine.simple.document.DocumentState
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.kotest.core.spec.IsolationMode
 import io.kotest.core.spec.style.DescribeSpec

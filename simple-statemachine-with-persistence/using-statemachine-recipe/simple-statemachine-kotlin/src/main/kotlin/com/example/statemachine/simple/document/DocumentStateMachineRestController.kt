@@ -1,17 +1,19 @@
 package com.example.statemachine.simple.document
 
+import com.example.statemachine.simple.document.config.DocumentIdChecker
+import com.example.statemachine.simple.document.config.exception.PersistenceDataIsNotExistException
 import com.example.statemachine.simple.document.persist.DocumentStateMachine
+import org.springframework.http.ResponseEntity
 import org.springframework.jdbc.core.JdbcTemplate
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @RestController
 class DocumentStateMachineRestController(
   private val jdbcTemplate: JdbcTemplate,
   private val documentStateMachine: DocumentStateMachine
 ) {
+  private val documentIdChecker: DocumentIdChecker = DocumentIdChecker(jdbcTemplate)
+
 
   @get:GetMapping("/state-list")
   val stateList: Array<DocumentState>
@@ -45,7 +47,19 @@ class DocumentStateMachineRestController(
     return EventResultStatement(documentId, event, State(prevState, changedState))
   }
 
+
+  @ExceptionHandler(PersistenceDataIsNotExistException::class)
+  fun handlePersistenceDataIsNotExistException(
+    ex: PersistenceDataIsNotExistException
+  ): ResponseEntity<Map<String, String>> {
+    return ResponseEntity.unprocessableEntity()
+      .body(mapOf("message" to ex.message!!))
+  }
+
+
+  @Throws(PersistenceDataIsNotExistException::class)
   private fun getStateFromDatabase(documentId: Int): DocumentState {
+    documentIdChecker.isExist(documentId)
     return jdbcTemplate.queryForObject(
       "SELECT state FROM documents WHERE id = ?",
       DocumentState::class.java, documentId
