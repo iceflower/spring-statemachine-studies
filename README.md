@@ -6,7 +6,7 @@
 ## 문서관리 상태 전이도 및 각 항목별 명세
 
 ### 상태 전이도
-![Alt text](./img/state-transition-diregram-v20231108.png)
+![Alt text](./img/state-transition-diregram-v20231108-02.png)
 ### 각 상태별 명세
 - `초안` : 문서가 최초로 등록되었을 때, 최초로 부여된다.
 - `검토 / 조정 진행중` : 관리자에 의해 공개 가능 여부를 검토받아야 하는 상태이다.
